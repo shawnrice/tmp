@@ -1,0 +1,121 @@
+/* This stylesheet is used to style the admin option form of the plugin. */
+
+.form-field input, .form-field textarea {
+	
+	width: auto;
+
+}
+
+	#form-maker {
+		width: 95%;
+		position: relative;
+		clear: both;
+		min-height: 100%;
+	}
+	#canvas {
+		width: 85%;
+		float: left;
+		position: relative;
+		min-height: 300px;
+	    border: 2px dashed #ccc;
+	    -webkit-border-radius: 1em;
+	    -moz-border-radius: 1em;
+	    border-radius: 1em;
+	    padding: 1em;
+	    margin-bottom: 10px;
+
+	}
+	#form-maker:after{
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 30px;
+	}
+	.wrap:after{
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 30px;
+	}
+	#canvas li {
+		width: 70px;
+		border: black solid 1px;
+		margin: 1em;
+		padding: 3px 10px 3px 10px;
+		text-align: right;
+		
+	}
+	#canvas li:hover {
+		width: 70px;
+		border: black solid 1px;
+		padding: 3px 10px 3px 10px;
+		
+	}
+	#canvas-drop {
+		position: relative;
+		margin: 1em;
+		padding: 1em 2em;
+		min-height: 300px;
+		width: 91%;
+
+	}
+	#palette {
+		position: relative;
+		float: left;
+		min-height: 300px;
+		text-align: right;
+		
+	}
+	#palette li {
+		padding: 3px 10px 3px 10px;
+		border: 1px black solid;
+		width: 70px;
+		margin-left: 50%;
+		cursor: move;
+	}
+
+    .placeholder {
+    	min-height: 300px;
+    	border: none;
+    }
+
+
+
+	.ui-dialog {
+	    font-family: "Open Sans", sans-serif;
+	    max-width: 80% !important;
+	    max-height: 80% !important;
+	    width: 70%;
+	    overflow: scroll;
+	    border: 3px solid #888;
+	    -webkit-border-radius: 1em;
+	    -moz-border-radius: 1em;
+	    border-radius: 1em;
+	    }
+
+	.ui-button {
+		text-align: right;
+		
+	}
+	.ui-dialog-titlebar {
+	    text-align: center !important;
+	    background-color: #bbb !important;
+	    font-size: 2em;
+	    line-height: 1.5em;
+	    border-bottom: #888 solid 3px;
+	    }
+	.ui-dialog-content {
+	}
+	/*.dlg-no-title .ui-dialog-titlebar { display: none }*/
+	#dialog {
+	    padding: 2em;
+	    background-color: white;
+    }
+	.ui-button-icon-only {
+		/*display: none;	*/
+	}
+	.ui-state-hover {
+		background-color: gray;
+	}
