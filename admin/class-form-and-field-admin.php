@@ -1,25 +1,22 @@
 <?php
 /**
- * Plugin Name.
+ * Form and Field.
  *
  * @package   Form_And_Field_Admin
- * @author    Your Name <email@example.com>
+ * @author    Shawn Patrick Rice <rice@shawnrice.org>
  * @license   GPL-2.0+
  * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @copyright 2014 Shawn Patrick Rice
  */
 
 /**
- * Plugin class. This class should ideally be used to work with the
- * administrative side of the WordPress site.
  *
- * If you're interested in introducing public-facing
- * functionality, then refer to `class-plugin-name.php`
+ * Class for the administrative side of the Form and Field plugin.
  *
  * @TODO: Rename this class to a proper name for your plugin.
  *
  * @package Form_And_Field_Admin
- * @author  Your Name <email@example.com>
+ * @author  Shawn Patrick Rice <rice@shawnrice.org>
  */
 class Form_And_Field_Admin {
 

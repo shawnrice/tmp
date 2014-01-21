@@ -1,16 +1,39 @@
-=== @TODO: Plugin Name ===
-Contributors: (this should be a list of wordpress.org userids)
-Donate link: http://example.com/
-Tags: comments, spam
+=== Form and Field ===
+Contributors: shawn-patrick-rice
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rice@shawnrice.com
+Tags: forms, fields, form generator
 Requires at least: 3.5.1
 Tested up to: 3.6
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Both an API and a frontend for building forms with custom handlers. These forms can be inserted anywhere.
 
 == Description ==
+
+Currently, this plugin is available only for WPMU or Buddypress enabled sites. There is a stock set of fields that have been defined, but these can be extended with other plugins. The same goes with the locations.
+
+Out of the box, the plugin supports...
+
+Look in public/fields to see how field types can be created.
+
+Forms are stored in a serialized manner in {wp-prefix}_form_and_field_forms. Using the native storage hook, the data is stored in {wp_prefix}_form_and_field_data.
+
+*	Locations
+**	BP Sign-up form
+**	WPMU Sign-up form
+*	Domains
+**	Blog
+**	User
+**	None 
+
+===Available hooks:===
+*	faf_list_fields
+** 	Called on the Form Builder admin page when generating the "field palette"
+*	faf_list_locations
+** 	Called on the Form Builder admin page when generating the "Locations" box for the form
+
 
 This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
 
@@ -46,7 +69,7 @@ e.g.
 = Using The WordPress Dashboard =
 
 1. Navigate to the 'Add New' in the plugins dashboard
-2. Search for 'plugin-name'
+2. Search for 'form-and-field'
 3. Click 'Install Now'
 4. Activate the plugin on the Plugin dashboard
 
@@ -54,15 +77,15 @@ e.g.
 
 1. Navigate to the 'Add New' in the plugins dashboard
 2. Navigate to the 'Upload' area
-3. Select `plugin-name.zip` from your computer
+3. Select `form-and-field.zip` from your computer
 4. Click 'Install Now'
 5. Activate the plugin in the Plugin dashboard
 
 = Using FTP =
 
-1. Download `plugin-name.zip`
-2. Extract the `plugin-name` directory to your computer
-3. Upload the `plugin-name` directory to the `/wp-content/plugins/` directory
+1. Download `form-and-field.zip`
+2. Extract the `form-and-field` directory to your computer
+3. Upload the `form-and-field` directory to the `/wp-content/plugins/` directory
 4. Activate the plugin in the Plugin dashboard
 
 
