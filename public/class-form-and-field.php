@@ -80,6 +80,9 @@ class Form_And_Field {
 		add_action( '@TODO', array( $this, 'action_method_name' ) );
 		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 
+		// Run the database update check.
+		add_action( 'plugins_loaded', array( $this, 'form_and_field_db_check') );
+
 	}
 
 	/**
@@ -122,6 +125,8 @@ class Form_And_Field {
 	 */
 	public static function activate( $network_wide ) {
 
+		self::form_and_field_install_tables();
+
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
 			if ( $network_wide  ) {
@@ -158,6 +163,8 @@ class Form_And_Field {
 	 *                                       deactivated on an individual blog.
 	 */
 	public static function deactivate( $network_wide ) {
+		// Does not delete the data tables. Only uninstalling will do that.
+
 
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
@@ -302,5 +309,78 @@ class Form_And_Field {
 	public function filter_method_name() {
 		// @TODO: Define your filter hook callback here
 	}
+
+	/**
+	 * Creates the form and the meta table.
+	 * @return null
+	 */
+	public function form_and_field_install_tables() {
+		global $wpdb;
+		$faf_db_version = '1.0';
+
+		$form_table = $wpdb->base_prefix . 'form_and_field_meta';
+
+		// Check to make sure the form table exists. If not, make it.
+	    if( $wpdb->get_var( 'SHOW TABLES LIKE ' . $form_table ) != $form_table ) {
+
+			$sql = "CREATE TABLE $form_table (
+			  			formid varchar(15) NOT NULL,
+			  			location varchar(15) NOT NULL, 
+			  			form text NOT NULL,
+			  			PRIMARY KEY (formid),
+			  			KEY (location)
+		  			);
+		  		";
+
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($sql);
+
+		}
+
+		$data_table = $wpdb->base_prefix . 'form_and_field_data';
+
+		// Check to make sure the data table exists. If not, make it.
+	    if( $wpdb->get_var( 'SHOW TABLES LIKE ' . $data_table ) != $data_table ) {
+
+			$sql = "CREATE TABLE $data_table (
+						id int NOT NULL AUTO_INCREMENT, 
+						formid varchar(15) NOT NULL,
+						data text NOT NULL,
+						PRIMARY KEY (id),
+						KEY (formid)
+					);
+				";
+
+			/**
+			 * I wish I could add the below lines:
+			 * ---
+			 * FOREIGN KEY (formid)
+			 *	REFERENCES $form_table(formid)
+			 *	ON UPDATE CASCADE ON DELETE RESTRICT
+			 **/
+
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($sql);
+
+		}
+
+		// Register the database version.
+	    add_option('form_and_field_db_version', $faf_db_version);
+
+	}
+
+
+	/**
+	 * Checks to make sure that the database tables are installed
+	 * @return null
+	 */
+	public function form_and_field_db_check() {
+	    global $faf_db_version;
+	    if ( get_site_option( 'form_and_field_db_version' ) != $faf_db_version ) {
+	        self::form_and_field_install_tables();
+	    }
+	}
+
+	
 
 }

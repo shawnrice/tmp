@@ -5,7 +5,7 @@
  * also follow WordPress Coding Standards and PHP best practices.
  *
  * @package   Form and Field
- * @author    Shawn Patrick Rice <rice@shawnrice.org>
+ * @author    Shawn Patrick Rice <rice@shawnrice.org>asdf
  * @license   GPL-2.0+
  * @link      http://asdf
  * @copyright 2014 Shawn Patrick Rice
@@ -13,10 +13,10 @@
  * @wordpress-plugin
  * Plugin Name:       Form and Field
  * Plugin URI:        @TODO
- * Description:       @TODO
+ * Description:       Build custom forms through the admin interface.
  * Version:           1.0.0
- * Author:            @TODO
- * Author URI:        @TODO
+ * Author:            Shawn Patrick Rice
+ * Author URI:        http://www.shawnrice.org
  * Text Domain:       form-and-field-locale
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -265,20 +265,12 @@ require_once( plugin_dir_path( __FILE__ ) . 'public/class-form-and-field.php' );
  * Register hooks that are fired when the plugin is activated or deactivated.
  * When the plugin is deleted, the uninstall.php file is loaded.
  *
- * @TODO:
- *
- * - replace Form_And_Field with the name of the class defined in
- *   `class-form-and-field.php`
  */
+
 register_activation_hook( __FILE__, array( 'Form_And_Field', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Form_And_Field', 'deactivate' ) );
+register_uninstall_hook( __FILE__, array( 'Form_And_Field', 'deactivate' ) );
 
-/*
- * @TODO:
- *
- * - replace Form_And_Field with the name of the class defined in
- *   `class-form-and-field.php`
- */
 add_action( 'plugins_loaded', array( 'Form_And_Field', 'get_instance' ) );
 
 /*----------------------------------------------------------------------------*
@@ -286,12 +278,6 @@ add_action( 'plugins_loaded', array( 'Form_And_Field', 'get_instance' ) );
  *----------------------------------------------------------------------------*/
 
 /*
- * @TODO:
- *
- * - replace `class-plugin-admin.php` with the name of the plugin's admin file
- * - replace Form_And_Field_Admin with the name of the class defined in
- *   `class-form-and-field-admin.php`
- *
  * If you want to include Ajax within the dashboard, change the following
  * conditional to:
  *
@@ -299,8 +285,8 @@ add_action( 'plugins_loaded', array( 'Form_And_Field', 'get_instance' ) );
  *   ...
  * }
  *
- * The code below is intended to to give the lightest footprint possible.
  */
+
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-form-and-field-admin.php' );
@@ -325,4 +311,25 @@ if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 	    require_once($class);
 	}
 
+	// Currently empty, but this is where others can load their fields
+	do_action('form_and_field_register_add_on_fields');
+	// Currently empty, but this is where others can load their locations
+	do_action('form_and_field_register_add_on_locations');
+
 }
+
+
+function form_and_field_install() {
+
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -35,6 +35,18 @@ Forms are stored in a serialized manner in {wp-prefix}_form_and_field_forms. Usi
 ** 	Called on the Form Builder admin page when generating the "Locations" box for the form
 
 
+To add your own fields:
+
+To add, you'll need to write a class that `extends FAF_Field` or one of the other fields located in the 'fields' directory. 
+The most important functions that you will need to include/override are the `__construct` and the `render_field` functions.
+
+1. add_action('form_and_field_register_add_on_locations' , 'MY_CUSTOM_FIELD_FUNCTION');
+2.	function MY_CUSTOM_FIELD_FUNCTION() {
+		require_once( plugin_dir_path( __FILE__ ) . 'MY_CUSTOM_FIELD_CLASS.php');
+	}
+
+
+
 This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
 
 For backwards compatibility, if this section is missing, the full length of the short description will be used, and
