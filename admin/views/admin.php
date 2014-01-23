@@ -48,7 +48,7 @@ function faf_admin_form_builder_create_page()  {
 
 	$classes = new FAF_Field_Text( 'form_classes' , 'CSS Classes' );
 	$classes->set_required( FALSE );
-	$classes->set_size( 60 );
+	$classes->set_size( 59 );
 	$classes->set_placeholder( 'Separate class names with spaces.' );
 
 	$instructions = new FAF_Field_Textarea( 'form_instructions' , 'Instructions' );
@@ -61,6 +61,7 @@ function faf_admin_form_builder_create_page()  {
 	$method->set_required( TRUE );
 	$method->add_option( 'Placeholder' );
 	$method->set_default( 'placeholder' );
+	$method->add_class( 'form-maker-select' );
 	$method->set_disabled( TRUE );
 
 	?>
@@ -128,8 +129,9 @@ function form_and_field_queue_inline_js()  {
 		$( "#dialog" ).dialog( {
 		    autoOpen: false , 
 		    modal: true , 
-		    minHeight: 800 , 
-		    minWidth: 400 , 
+		    minHeight: 600 , 
+		    minWidth: 400 ,
+		    height: 600,
 		    width: '60%' , 
 		    title: 'Field Configuration' , 
 		    show: 'fade' , 
@@ -140,7 +142,13 @@ function form_and_field_queue_inline_js()  {
 		    	of: window
 		    } , 		
 		    buttons : {
-	            "Close": function()  {
+	            "Add Field": function()  {
+    	            $( this ).dialog( 'close' );
+        	    },
+        	    "Remove Field": function()  {
+    	            $( this ).dialog( 'close' );
+        	    },
+        	    "Cancel": function()  {
     	            $( this ).dialog( 'close' );
         	    }
         	} , 
@@ -279,7 +287,7 @@ function faf_locations_start()  {
 	<tr valign='top' class='form-field form-required' required>
 		<th scope='row'><label for='form_locations'>Form Location: </label></th>
 		<td>
-			<select name='form_locations form-field'>
+			<select name='form_locations' class='form-maker-select form-field'>
 	<?php
 }
 

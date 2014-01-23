@@ -6,6 +6,15 @@
 
 }
 
+.form-maker-select {
+	width: 280px;
+}
+
+.form-field > th {
+	text-align: left;
+	margin-right: 3em;
+
+}
 	#form-maker {
 		width: 95%;
 		position: relative;
@@ -96,25 +105,35 @@
 	    }
 
 	.ui-button {
-		text-align: right;
-		
+		text-align: center;
+		width: 100px;
+		line-height: 1.5em;
+		margin: 0 .35em;		
 	}
 	.ui-dialog-titlebar {
 	    text-align: center !important;
 	    background-color: #bbb !important;
 	    font-size: 2em;
-	    line-height: 1.5em;
-	    border-bottom: #888 solid 3px;
-	    }
+	    line-height: 1.8em;
+	    border-bottom: #888 solid 2px;
+    }
 	.ui-dialog-content {
 	}
 	/*.dlg-no-title .ui-dialog-titlebar { display: none }*/
+	.ui-dialog-buttonset {
+		text-align: right;
+		padding: .5em 1em;
+		background-color: #BBB;
+		position: relative;
+		border-top: #888 solid 2px;
+	}
 	#dialog {
 	    padding: 2em;
 	    background-color: white;
+	    height: 200px;
     }
 	.ui-button-icon-only {
-		/*display: none;	*/
+		display: none;
 	}
 	.ui-state-hover {
 		background-color: gray;
