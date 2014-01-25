@@ -125,7 +125,19 @@ function form_and_field_queue_inline_js()  {
 //	  get: function( elem )  {
 //	      return elem.value.replace( /\r?\n/g ,  "\r\n" );
 //	  } };
+
+	function makeid() {
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+	    for( var i=0; i < 5; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+	    return text;
+	}
+
 	jQuery( document ).ready( function( $ )  {
+
 		$( "#dialog" ).dialog( {
 		    autoOpen: false , 
 		    modal: true , 
@@ -153,82 +165,137 @@ function form_and_field_queue_inline_js()  {
         	    }
         	} , 
 		    open: function()  {
-		        $( '.ui-widget-overlay' ,  this ).hide().fadeIn();   
-		        $( '.ui-icon-closethick' ).bind( 'click.close' ,  function()  {
-		            $( '.ui-widget-overlay' ).fadeOut( function()  {
-//		              $( '.ui-icon-closethick' ).unbind( 'click.close' );
-//		              $( '.ui-icon-closethick' ).trigger( 'click' );
-		            });
-		            return false;
-		        });
+		    	// I really have no idea why, oh why I needed to do this, but, apparently, this works.
+				setTimeout(function() { 
+					$( ".collapsible" ).accordion( {
+			      		collapsible: true
+			    	});					
+					$( '.toggle' ).click(function(){
+						if( $( this ).next().is( ":hidden" ) )  {
+				            $( this ).next().slideDown( "fast" ); // slide it down
+				        } else {
+				            $( this ).next().hide( "fast" ); // hide it
+				        }
+				   });
+
+				$('#spy').bind("enterKey",function(e){
+				  var lines = $(this).val().split('\n');
+				  var len = lines.length;
+				  var dom = "<select class='default' name='default'><option value=''>---</option>";
+					$.each(lines, function( index, element){
+
+						if ( this != "" )
+						{
+							dom = dom + "<option value=\'" + this + "\'>" + this + "</option>";
+						}
+				  });
+				  dom = dom + "</select>";
+				  $("#written").html( dom );
+				});
+				$('#spy').keyup(function(e){
+				    if(e.keyCode == 13)
+				    {
+				        $(this).trigger("enterKey");
+				    }
+				    if(e.keyCode == 8) 
+				    {
+				        $(this).trigger("enterKey");
+				    }
+				    if(e.keyCode == 46) 
+				    {
+				        $(this).trigger("enterKey");
+				    }
+				});
+				$( "#spy" ).change(function() {
+				    $(this).trigger("enterKey");
+				});
+
+				}, 1000);
 		    }
 		});
 
         $( "#button" ).on( "click" ,  function()  {
 			$( "#dialog" ).dialog( "open" );
 		});
-
-		$( "#cancel-element" ).on( "click" ,  function()  {
-			$( "#dialog" ).dialog( "close" );
-		});
 		
         $( ".draggable" ).draggable( {
         	helper: "clone" , 
         	cursor: "move" , 
         	zIndex: 200 , 
-        	revert: 'invalid' , 
         	opacity: .75 , 
         	containment: 'window' , 
-        	connectToSortable: '#canvas-drop'
+        	connectToSortable: '#canvas-drop',
+        	addClasses: false,
+        	start: function () {
+            	origin = 'draggable';
+        	}
     	});
+
+		var origin = 'sortable';
 
     	$( "#canvas-drop" ).droppable( {
 			activeClass: "ui-state-default" , 
 			hoverClass: "ui-state-hover" , 
-			accept: ".element" , 
-			drop: function( event ,  ui )  {
-				var id = ui.draggable;
-				var text = ui.draggable.context.innerHTML;
-				// $( "#inputEl>div" ).draggable( {
-				// 	revert: true , 
-				// 	opacity: 0.4 , 
-				// 	helper: "clone"
-				// });
-			}
-		} ).sortable( {
+			accept: "#palette > ul > li" ,
+			drop: function (event, ui) {
+
+         	}
+			// tolerance: 'touch',
+			// addClasses: false, 
+			// drop: function( event ,  ui )  {
+			// 	var id = ui.draggable;
+			// 	var text = ui.draggable.context.innerHTML;
+			// 	// $( ui.draggable ).draggable( {
+			// 	// 	revert: true , 
+			// 	// 	opacity: 0.4 , 
+			// 	// 	helper: "clone"
+			// 	// });
+			// 	// $( ui.draggable ).addClass('canvas-element');
+			// 	alert('test');
+
+			// }
+		}).sortable( {
 			items: "li:not( .placeholder ) " , 
-			cursor: "move" , 
-			revert: true , 
+			cursor: "move" ,
+			// revert: true,
 			forcePlaceholderSize: true , 
+			placeholder: 'placeholder',
+			beforeStop: function( event, ui ) {
+				if (origin == 'draggable') {
+					ui.item[0].innerHTML = '<span>Look at this new fancy HTML!</span>';
+					$(ui.item[0]).addClass('canvas-element');
+					origin = 'sortable';
+					var field_id = makeid();
+					$(ui.item[0]).attr('id', field_id);
+					$(ui.item[0]).append('<div>Testing</div>');
+				}
+
+			},
 			receive: function( event ,  ui )  {
-				var id = ui.item.attr( "id" );
+				// alert(field_id);
+				var id = ui.item.attr( 'id' );
 				var url = '<?php echo admin_url( "admin-ajax.php" ); ?>';
 				var data = {
 					// our current ajax handler
 					action: 'dd_ajax' , 
 					id: id , 
 				};
-				$.post( url ,  data ,  function( data )  {
+				$.post( url , data , function( data )  {
 					document.getElementById( "dialog" ).innerHTML = data;
 				});
-				$( "#dialog" ).dialog( "open" );
-				$( "#cancel-element" ).click( function( $ )  {$( '#dialog' ).close();});
-			} , 
+				// $('<input type="hidden" id="identifier" value=' + field_id + ' />').insertBefore( '#dialog-submit' );
+				// var droppedObject = ui.draggable.data('object');
+				// console.log(ui.draggable);
+				// $(ui.draggable).addClass('placeholder');
+		        // ui.item.addClass('placeholder');
+        				// alert(this);
+				$( '#dialog' ).dialog( 'open' );
+			},
+
 			sort: function( event ,  ui )  {
 				$( this ).removeClass( "ui-state-default" );
 			}
 		});
-		$( ".collapsible" ).accordion( {
-      		collapsible: true
-    	});
-    	$( ".toggle" ).click( function()  {
-	        // check the visibility of the next element in the DOM
-	        if( $( this ).next().is( ":hidden" ) )  {
-	            $( this ).next().slideDown( "fast" ); // slide it down
-	        } else {
-	            $( this ).next().hide( "fast" ); // hide it
-	        }
-	    });
 	});
 
 </script>

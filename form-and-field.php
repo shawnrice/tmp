@@ -38,31 +38,22 @@ function faf_configure_field_form($id) {
 // Get the form element type
 $id = $_POST['id'];
 
-wp_enqueue_script("jquery");
-wp_enqueue_script("jquery-ui-core");
-wp_enqueue_script("jquery-ui-dialog");
-wp_enqueue_script("jquery-ui-draggable");
-wp_enqueue_script("jquery-ui-droppable");
-wp_enqueue_script("jquery-ui-sortable");
-wp_enqueue_script("jquery-ui-accordion");
-wp_enqueue_script("jquery-effects-core");
-wp_enqueue_script("jquery-effects-fade");
+// wp_enqueue_script("jquery");
+// wp_enqueue_script("jquery-ui-core");
+// wp_enqueue_script("jquery-ui-dialog");
+// wp_enqueue_script("jquery-ui-draggable");
+// wp_enqueue_script("jquery-ui-droppable");
+// wp_enqueue_script("jquery-ui-sortable");
+// wp_enqueue_script("jquery-ui-accordion");
+// wp_enqueue_script("jquery-effects-core");
+// wp_enqueue_script("jquery-effects-fade");
+
+
 // Put in the jQuery to make the fieldsets open and close
 ?>
-  <script>
-  $(function() {
-    $(".toggle").click(function () {
-        // check the visibility of the next element in the DOM
-        if ($(this).next().is(":hidden")) {
-            $(this).next().slideDown("fast"); // slide it down
-        } else {
-            $(this).next().hide("fast"); // hide it
-        }
-    });
-  });
-  </script>
 
- <?php
+
+<?php
 
 /***
  * Start switch statement...
@@ -100,42 +91,12 @@ case "field-element-list":
 ?>
 
 	<script type="text/javascript">
-			$('#spy').bind("enterKey",function(e){
-			  var lines = $(this).val().split('\n');
-			  var len = lines.length;
-			  var dom = "<select class='default' name='default'><option value=''>---</option>";
-				$.each(lines, function( index, element){
 
-					if ( this != "" )
-					{
-						dom = dom + "<option value=\'" + this + "\'>" + this + "</option>";
-					}
-			  });
-			  dom = dom + "</select>";
-			  $("#written").html( dom );
-			});
-			$('#spy').keyup(function(e){
-			    if(e.keyCode == 13)
-			    {
-			        $(this).trigger("enterKey");
-			    }
-			    if(e.keyCode == 8) 
-			    {
-			        $(this).trigger("enterKey");
-			    }
-			    if(e.keyCode == 46) 
-			    {
-			        $(this).trigger("enterKey");
-			    }
-			});
-			$( "#spy" ).change(function() {
-			    $(this).trigger("enterKey");
-			});
 	</script>
 
 	<h3>Configure Select List Field Element</h3>
 	<p> </p>
-
+	<form id='faf_configure_field_form' />
 	<p>Enter a <span class="emph">&lt; label &gt;</span> for the field: <input type="text" style="font-size: 1.2em; padding: 5px; font-family: 'Open Sans'; width: 50%; margin-left: 10px;"></p>
 
 	<p>Would you like to include a <span class="emph">&lt; null value &gt;</span> option? <input type="radio" name="null" value="1" checked> Yes <input type="radio" name="null" value="0"> No</p>
@@ -218,7 +179,7 @@ default:
 endswitch;
 ?>
 	<div style="border: 1px black solid; margin-top: 2em;">
-		<span class="toggle" style="cursor:pointer; margin-left: 2em; padding: 0 .5em; display:inline-block; background: #fff; position:relative; top: -.8em; left: -1em;">More Attributes &raquo;</span>
+		<span id='toggle' class="toggle" style="cursor:pointer; margin-left: 2em; padding: 0 .5em; display:inline-block; background: #fff; position:relative; top: -.8em; left: -1em;">More Attributes &raquo;</span>
 		<div style="display: none; margin: 1em 2em 2em 2em;">
 			<table>
 				<tr>
@@ -236,18 +197,18 @@ endswitch;
 			</table>
 		</div>
 	</div>
-
 <div style="text-align:right; padding-right: 20px; margin-top: 40;">
-	<input type="submit" value="Submit">
+	<input id='dialog-submit' type="submit" value="Submit">
 	<input id="cancel-element" type="submit" value="Cancel">
 	<input type="submit" value="Remove">
 </div>
-<script>
-	$('#formid').serializeArray();
-</script>
-<?php
+</form>
 
-die();
+<?php
+	
+	// This is important to make sure that the ajax callback works.
+	die();
+
 }
 
 

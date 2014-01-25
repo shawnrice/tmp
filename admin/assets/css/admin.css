@@ -70,6 +70,15 @@
 		width: 91%;
 
 	}
+
+
+	.canvas-element {
+		width: 95% !important;
+		height: 3em;
+		-webkit-border-radius: 10px;
+		        border-radius: 10px;
+		padding: .35em 2em;
+	}
 	#palette {
 		position: relative;
 		float: left;
@@ -86,8 +95,10 @@
 	}
 
     .placeholder {
-    	min-height: 300px;
-    	border: none;
+    	min-height: 3em;
+    	width: 95% !important;
+    	border: none !important;
+    	background-color: yellow;
     }
 
 
@@ -102,6 +113,7 @@
 	    -webkit-border-radius: 1em;
 	    -moz-border-radius: 1em;
 	    border-radius: 1em;
+	    cursor: pointer;
 	    }
 
 	.ui-button {
@@ -119,7 +131,7 @@
     }
 	.ui-dialog-content {
 	}
-	/*.dlg-no-title .ui-dialog-titlebar { display: none }*/
+	.dlg-no-title .ui-dialog-titlebar { display: none }
 	.ui-dialog-buttonset {
 		text-align: right;
 		padding: .5em 1em;
@@ -131,6 +143,7 @@
 	    padding: 2em;
 	    background-color: white;
 	    height: 200px;
+	    overflow: scroll;
     }
 	.ui-button-icon-only {
 		display: none;
