@@ -50,7 +50,7 @@ class FAF_Field_Text extends FAF_Field {
 
 	public function render_field() {
 
-		$return = "<input name='$this->name' type='text' ";
+		$return = "<input name='$this->name' id='$this->id' type='text' ";
 
 
 		if ( isset($this->classes) ) {

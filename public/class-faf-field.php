@@ -27,11 +27,14 @@ class FAF_Field {
 	protected $label;
 	protected $description;
 	protected $type;
+	protected $id;
 
 	public function __construct($name, $label, $type) {
+		// I need to do some sanitization functions on this.
 		$this->set_name($name);
 		$this->set_type($type);
 		$this->set_label($label);
+		$this->set_id($name);
 		$this->classes = array( "form-field" );
 
 		return TRUE;
@@ -53,6 +56,13 @@ class FAF_Field {
 		return $this->label;
 	}
 
+	public function set_id($id) {
+		$this->id = $id;
+	}
+	public function get_id() {
+		return $this->id;
+	}
+
 	public function set_description($description) {
 		$this->description = $description;
 	}
@@ -67,6 +77,21 @@ class FAF_Field {
 
 	public function get_type() {
 		return $this->type;
+	}
+
+	public function set_wrapper( $element , $id , $class = array() ) {
+		$options = array( 'div', 'p', 'span' );
+		if (! in_array( $element, $options ) )
+			return;
+		$this->wrapper = array( 'element' => $element, 'id' => $id, 'class' => $class );
+	}
+
+	public function remove_wrapper() {
+		unset( $this->wrapper );
+	}
+
+	public function get_wrapper() {
+		return $this->wrapper;
 	}
 
 	public function set_required( $required ) {
@@ -159,7 +184,27 @@ class FAF_Field {
 			$return .= "'>\r\n";
 		}
 		$return .= "<th scope='row'><label for='$this->name'>$this->label:</label></th>\r\n";
-		$return .= "<td>\r\n" . $this->render_field() . "\r\n</td>\r\n";
+		$return .= "<td>\r\n";
+		if ( isset( $this->wrapper ) ) {
+			$return .= '<' . $this->wrapper['element'] . ' id="' . $this->wrapper['id'] . '"';
+			if ( isset( $this->wrapper['class'] ) && is_array( $this->wrapper['class'] ) && ( count( $this->wrapper['class'] > 0 ) ) ) {
+				$return .= " class='";
+				foreach ( $this->wrapper['class'] as $class ) {
+					$return .= "$class ";
+				}
+				$return .= "'";
+			}
+			$return .= ">\r\n";
+		}
+		$return .= $this->render_field() . "\r\n";
+		if ( isset( $this->wrapper ) ) {
+			$return .= '</' . $this->wrapper['element'] . ">\r\n"; 
+		}
+		if (isset($this->description) && (! empty($this->description))) {
+			$return .= "<span class='faf-description'>" . $this->description . "</span>\r\n";
+		}
+		$return .= "</td>\r\n";
+		
 		$return .= "</tr>\r\n";
 
 		print $return;

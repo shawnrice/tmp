@@ -6,6 +6,26 @@
 
 }
 
+.faf-name-li, .faf-type-li {
+	display: block;
+	text-align: left;
+	float: left;
+	line-height: 2.7em;
+	margin: 0 1.5em;
+	font-weight: bold;
+	font-size: 1.2em;
+	
+}
+.faf-name-li:before {
+	content: 'Name: ';
+	font-weight: normal;
+}
+
+.faf-type-li:before {
+	content: 'Type: ';
+	font-weight: normal;
+}
+
 .form-maker-select {
 	width: 280px;
 }
@@ -70,8 +90,23 @@
 		width: 91%;
 
 	}
-
-
+	.faf-field-description {
+		font-size: .75em !important;	
+	}
+	.edit-field-button {
+		background-color: white;
+		border: 1px blue solid;
+		padding: 2px 2em;
+		font-size: .9em;
+		font-family: Arial, sans-serif;
+		color: blue;
+		margin: .75em 1em 0 2em;
+		
+	}
+	.edit-field-button:hover {
+		background-color: gray;
+		cursor: pointer;
+	}
 	.canvas-element {
 		width: 95% !important;
 		height: 3em;
@@ -99,9 +134,40 @@
     	width: 95% !important;
     	border: none !important;
     	background-color: yellow;
+    	opacity: .2;
     }
 
+    tr.form-field > td > ul {
+    	margin: .5em 0 0 0;
+    }
 
+    .faf-description {
+    	display: block;
+    	font-size: .8em;
+    	margin-top: .35em;
+    	opacity: .85;
+    	cursor: help;
+    }
+
+	.faf-form-region {
+		font-size: 1.35em;
+	}
+
+	.faf-form-region:after {
+		content:' ';
+		display: block;
+		width: 80%;
+		border-top: 1px dashed gray;
+	}
+
+	.faf-form-region-description {
+		display: block;
+		opacity: .85;	
+	}
+
+	.faf-form-region-description:after {
+			
+	}
 
 	.ui-dialog {
 	    font-family: "Open Sans", sans-serif;
@@ -113,7 +179,7 @@
 	    -webkit-border-radius: 1em;
 	    -moz-border-radius: 1em;
 	    border-radius: 1em;
-	    cursor: pointer;
+	    cursor: default;
 	    }
 
 	.ui-button {
@@ -149,5 +215,5 @@
 		display: none;
 	}
 	.ui-state-hover {
-		background-color: gray;
+		
 	}

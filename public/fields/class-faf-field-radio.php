@@ -42,8 +42,11 @@ class FAF_Field_Radio extends FAF_Field_List {
 				$return .= " class='" . implode(' ', $this->classes) . "' ";
 			}
 			$return .= " name='" . $this->name . "' ";
-			$return .= " value='" . $value . "' ";
-			$return .= "> $name </label></li>\r\n";
+			$return .= " value='" . $value['value'] . "' ";
+			if ($this->get_default() == $value['name']) {
+				$return .= " checked";
+			}
+			$return .= ">$name</label></li>\r\n";
 		}
 
 		if ($this->other) {

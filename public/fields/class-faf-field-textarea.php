@@ -75,6 +75,9 @@ class FAF_Field_Textarea extends FAF_Field_Text {
 
 	public function render_field() {
 		$return = "<textarea name='$this->name' ";
+		if ( isset($this->id) ) {
+			$return .= " id='" . $this->id . "'";
+		}
 		if (! empty($this->classes)) {
 				$return .= " class='" . implode(' ', $this->classes) . "' ";
 		}

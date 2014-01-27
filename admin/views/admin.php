@@ -48,7 +48,7 @@ function faf_admin_form_builder_create_page()  {
 
 	$classes = new FAF_Field_Text( 'form_classes' , 'CSS Classes' );
 	$classes->set_required( FALSE );
-	$classes->set_size( 59 );
+	$classes->set_size( 60 );
 	$classes->set_placeholder( 'Separate class names with spaces.' );
 
 	$instructions = new FAF_Field_Textarea( 'form_instructions' , 'Instructions' );
@@ -89,10 +89,8 @@ function faf_admin_form_builder_create_page()  {
 			<div id="palette">
 				<?php do_action( 'faf_list_fields' ); ?>
 			</div>
-					<div id='test'><input type='submit' value='Submit'></div>
-
 			</form>
-			<div id="dialog" class="" title="Form Element"><p>Hello!</p></div>
+			<div id="dialog" class="" title="Form Element"></div>
 		</div>
 		<div id="zoneclear"></div>
 		<br style="clear:both; float:none; display:block; height:1px;" />
@@ -121,22 +119,35 @@ function form_and_field_queue_inline_js()  {
   ?>
   <script>
 
-//	$.valHooks.textarea = {
-//	  get: function( elem )  {
-//	      return elem.value.replace( /\r?\n/g ,  "\r\n" );
-//	  } };
-
 	function makeid() {
 	    var text = "";
-	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	    var possible = "abcdefghijklmnopqrstuvwxyz";
 
-	    for( var i=0; i < 5; i++ )
+	    for( var i=0; i < 13; i++ )
 	        text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 	    return text;
 	}
 
 	jQuery( document ).ready( function( $ )  {
+		// http://jsfiddle.net/sxGtM/3/
+		// http://stackoverflow.com/questions/1184624/convert-form-data-to-js-object-with-jquery
+		$.fn.serializeObject = function()
+		{
+		    var o = {};
+		    var a = this.serializeArray();
+		    $.each(a, function() {
+		        if (o[this.name] !== undefined) {
+		            if (!o[this.name].push) {
+		                o[this.name] = [o[this.name]];
+		            }
+		            o[this.name].push(this.value || '');
+		        } else {
+		            o[this.name] = this.value || '';
+		        }
+		    });
+		    return o;
+		};
 
 		$( "#dialog" ).dialog( {
 		    autoOpen: false , 
@@ -148,79 +159,72 @@ function form_and_field_queue_inline_js()  {
 		    title: 'Field Configuration' , 
 		    show: 'fade' , 
 		    hide: 'fade' , 
-		    position: {
-		    	my: "center" , 
-		    	at: "center" , 
-		    	of: window
-		    } , 		
+		    closeOnEscape: false,
+		    position: [ 'top', 60 ] ,
 		    buttons : {
 	            "Add Field": function()  {
+    	            fid = $('#identifier').val();
+    	            field_data = JSON.stringify($('#faf_configure_field_form').serializeObject());
+    	            name = $( '#name' ).val();
+    	            document.getElementById( fid ).innerHTML = '<span class="faf-name-li">' + name + '</span> <span class="faf-type-li">' 
+    	            	+ $( '#faf-type' ).val() + '</span><input type="hidden" name="' + fid + '" value="' + field_data + '" />';
     	            $( this ).dialog( 'close' );
+
         	    },
         	    "Remove Field": function()  {
-    	            $( this ).dialog( 'close' );
-        	    },
-        	    "Cancel": function()  {
-    	            $( this ).dialog( 'close' );
+        	    	// Confirm the removal before acting on it.        	    	
+        	    	if (confirm('Are you sure that you want to remove the field?') == true ) {
+	        	    	// Remove the field from the form.
+	    	            $( '#' + $( '#identifier' ).val() ).parent().remove();
+	    	            $( this ).dialog( 'close' );
+					}
         	    }
-        	} , 
+        	}, 
 		    open: function()  {
 		    	// I really have no idea why, oh why I needed to do this, but, apparently, this works.
-				setTimeout(function() { 
-					$( ".collapsible" ).accordion( {
-			      		collapsible: true
-			    	});					
-					$( '.toggle' ).click(function(){
-						if( $( this ).next().is( ":hidden" ) )  {
-				            $( this ).next().slideDown( "fast" ); // slide it down
-				        } else {
-				            $( this ).next().hide( "fast" ); // hide it
-				        }
-				   });
+		    	// I need to find a less hackish way to go with this.
+				setTimeout(function() {
+					$( '#spy' ).bind( "enterKey", function( e ) {
+					  var lines = $( this ).val().split( '\n' );
+					  var len = lines.length;
+					  var dom = "<select class='default' name='default'><option value=''>---</option>";
+						$.each( lines, function( index, element ){
 
-				$('#spy').bind("enterKey",function(e){
-				  var lines = $(this).val().split('\n');
-				  var len = lines.length;
-				  var dom = "<select class='default' name='default'><option value=''>---</option>";
-					$.each(lines, function( index, element){
+							if ( this != "" )
+							{
+								dom = dom + "<option value=\'" + this + "\'>" + this + "</option>";
+							}
+					  });
+					  dom = dom + "</select>";
+					  $( '#written' ).html( dom );
+					});
+					$( '#spy' ).keyup( function( e ){
+					    if ( e.keyCode == 13 ) {
+					        $( this ).trigger( 'enterKey' );
+					    }
+					    if ( e.keyCode == 8 ) {
+					        $( this ).trigger( 'enterKey' );
+					    }
+					    if ( e.keyCode == 46 ) {
+					        $( this ).trigger( 'enterKey' );
+					    }
+					});
+					$( '#spy' ).change( function() {
+					    $( this ).trigger( 'enterKey' );
+					});
+					// Set the focus to the first text box
+					$( '#name' ).focus();
+					// Put in a hidden field with the identifier.
+					$( '<input type="hidden" name="identifier" id="identifier" value=' + 
+						field_id + ' />' ).insertBefore( 'input#name' );
 
-						if ( this != "" )
-						{
-							dom = dom + "<option value=\'" + this + "\'>" + this + "</option>";
-						}
-				  });
-				  dom = dom + "</select>";
-				  $("#written").html( dom );
-				});
-				$('#spy').keyup(function(e){
-				    if(e.keyCode == 13)
-				    {
-				        $(this).trigger("enterKey");
-				    }
-				    if(e.keyCode == 8) 
-				    {
-				        $(this).trigger("enterKey");
-				    }
-				    if(e.keyCode == 46) 
-				    {
-				        $(this).trigger("enterKey");
-				    }
-				});
-				$( "#spy" ).change(function() {
-				    $(this).trigger("enterKey");
-				});
-
-				}, 1000);
+				}, 1000 );
 		    }
 		});
-
-        $( "#button" ).on( "click" ,  function()  {
-			$( "#dialog" ).dialog( "open" );
-		});
 		
-        $( ".draggable" ).draggable( {
-        	helper: "clone" , 
-        	cursor: "move" , 
+        $( '.draggable' ).draggable( {
+        	helper: 'clone' , 
+        	cursor: 'move' , 
         	zIndex: 200 , 
         	opacity: .75 , 
         	containment: 'window' , 
@@ -233,46 +237,28 @@ function form_and_field_queue_inline_js()  {
 
 		var origin = 'sortable';
 
-    	$( "#canvas-drop" ).droppable( {
+    	$( '#canvas-drop' ).droppable( {
 			activeClass: "ui-state-default" , 
 			hoverClass: "ui-state-hover" , 
 			accept: "#palette > ul > li" ,
-			drop: function (event, ui) {
-
+			drop: function ( event, ui ) {
+				// Null. For now.
          	}
-			// tolerance: 'touch',
-			// addClasses: false, 
-			// drop: function( event ,  ui )  {
-			// 	var id = ui.draggable;
-			// 	var text = ui.draggable.context.innerHTML;
-			// 	// $( ui.draggable ).draggable( {
-			// 	// 	revert: true , 
-			// 	// 	opacity: 0.4 , 
-			// 	// 	helper: "clone"
-			// 	// });
-			// 	// $( ui.draggable ).addClass('canvas-element');
-			// 	alert('test');
-
-			// }
 		}).sortable( {
 			items: "li:not( .placeholder ) " , 
 			cursor: "move" ,
-			// revert: true,
 			forcePlaceholderSize: true , 
 			placeholder: 'placeholder',
 			beforeStop: function( event, ui ) {
-				if (origin == 'draggable') {
-					ui.item[0].innerHTML = '<span>Look at this new fancy HTML!</span>';
-					$(ui.item[0]).addClass('canvas-element');
+				if ( origin == 'draggable' ) {
+					$( ui.item[0] ).addClass( 'canvas-element' );
 					origin = 'sortable';
-					var field_id = makeid();
-					$(ui.item[0]).attr('id', field_id);
-					$(ui.item[0]).append('<div>Testing</div>');
+					field_id = makeid();
+					ui.item[0].innerHTML = '<span id="' + field_id + '"></span>';
+					$( ui.item[0] ).append( '<input type="button" class="edit-field-button" value="Edit" />' );
 				}
-
 			},
 			receive: function( event ,  ui )  {
-				// alert(field_id);
 				var id = ui.item.attr( 'id' );
 				var url = '<?php echo admin_url( "admin-ajax.php" ); ?>';
 				var data = {
@@ -281,14 +267,8 @@ function form_and_field_queue_inline_js()  {
 					id: id , 
 				};
 				$.post( url , data , function( data )  {
-					document.getElementById( "dialog" ).innerHTML = data;
+					document.getElementById( 'dialog' ).innerHTML = data;
 				});
-				// $('<input type="hidden" id="identifier" value=' + field_id + ' />').insertBefore( '#dialog-submit' );
-				// var droppedObject = ui.draggable.data('object');
-				// console.log(ui.draggable);
-				// $(ui.draggable).addClass('placeholder');
-		        // ui.item.addClass('placeholder');
-        				// alert(this);
 				$( '#dialog' ).dialog( 'open' );
 			},
 
@@ -324,7 +304,8 @@ function faf_add_defaults()  {
 						'radio' , 
 						'checkbox' , 
 						'number' , 
-						'password'
+						'password',
+						'hidden',
 		 );
 	foreach( $defaults as $field )  {
 		faf_add_field( $field );
@@ -395,7 +376,8 @@ function form_and_field_network_admin_tabs( $current = 'general' )  {
 
     $tabs = array(  'general' => 'General' , 
     				'form-builder' => 'Form Builder' , 
-    				'locations' => 'Locations'
+    				'locations' => 'Locations',
+    				'settings' => 'Settings',
   );
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="">';
@@ -412,7 +394,9 @@ function form_and_field_network_admin_tabs( $current = 'general' )  {
     	case 'form-builder':
     		faf_admin_form_builder_create_page();
     		break;
-    	
+    	case 'settings':
+			faf_admin_settings();
+			break;    	
     	default:
     		faf_admin_general();
     		break;
@@ -422,4 +406,23 @@ function form_and_field_network_admin_tabs( $current = 'general' )  {
 
 function faf_admin_general()  {
 	echo "This is the general page";
+}
+
+function faf_admin_settings() {
+
+	$settings = new FAF_Form('faf_settings');
+
+	$settings->add_region('Assets');
+	$settings->set_region_description( 'Assets' , 'Please specify where you would like to load the external assets from.' );
+	$jvalidate = new FAF_Field_List('jvalidate' , 'jQuery Validate');
+	$jvalidate->add_option('local' , 'Locally Hosted');
+	$jvalidate->add_option('cdnjs' , 'CDNjs');
+	$jvalidate->add_option('microsoft' , 'Microsoft');
+	$jvalidate->set_description('Choose where to load jQuery Validate from.');
+	$jvalidate->set_default('Locally Hosted');
+
+	$settings->add_field('Assets', $jvalidate);
+	$settings->print_form();
+
+
 }
