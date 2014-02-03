@@ -23,24 +23,24 @@
  */
 class FAF_Field {
 
-	protected $name;
+	public $name;
 	protected $label;
 	protected $description;
 	protected $type;
 	protected $id;
 
-	public function __construct($name, $label, $type) {
+	public function __construct( $name, $label, $type ) {
 		// I need to do some sanitization functions on this.
-		$this->set_name($name);
-		$this->set_type($type);
-		$this->set_label($label);
-		$this->set_id($name);
+		$this->set_name( $name );
+		$this->set_type( $type );
+		$this->set_label( $label );
+		$this->set_id( $name );
 		$this->classes = array( "form-field" );
 
 		return TRUE;
 	}
 
-	public function set_name($name) {
+	public function set_name( $name ) {
 		$this->name = $name;
 	}
 
@@ -48,7 +48,7 @@ class FAF_Field {
 		return $this->name;
 	}
 
-	public function set_label($label) {
+	public function set_label( $label ) {
 		$this->label = $label;
 	}
 
@@ -56,14 +56,14 @@ class FAF_Field {
 		return $this->label;
 	}
 
-	public function set_id($id) {
+	public function set_id( $id ) {
 		$this->id = $id;
 	}
 	public function get_id() {
 		return $this->id;
 	}
 
-	public function set_description($description) {
+	public function set_description( $description ) {
 		$this->description = $description;
 	}
 
@@ -81,7 +81,7 @@ class FAF_Field {
 
 	public function set_wrapper( $element , $id , $class = array() ) {
 		$options = array( 'div', 'p', 'span' );
-		if (! in_array( $element, $options ) )
+		if ( ! in_array( $element, $options ) )
 			return;
 		$this->wrapper = array( 'element' => $element, 'id' => $id, 'class' => $class );
 	}
@@ -97,10 +97,10 @@ class FAF_Field {
 	public function set_required( $required ) {
 		if ( $required ) {
 			$this->required = TRUE;
-			$this->add_class('required');
+			$this->add_class( 'required' );
 		} else {
 			$this->required = FALSE;
-			$this->remove_class('required');
+			$this->remove_class( 'required' );
 		}
 	}
 
@@ -120,7 +120,7 @@ class FAF_Field {
 		return $this->disabled;
 	}
 
-	
+
 	public function set_read_only( $read_only ) {
 		if ( $read_only ) {
 			$this->read_only = TRUE;
@@ -135,11 +135,11 @@ class FAF_Field {
 
 
 	public function add_class( $class ) {
-		array_push($this->classes, $class);
+		array_push( $this->classes, $class );
 	}
 
 	public function remove_class( $class ) {
-		unset($this->classes[array_search($class , $this->classes)]);
+		unset( $this->classes[array_search( $class , $this->classes )] );
 	}
 
 	public function get_classes() {
@@ -147,12 +147,13 @@ class FAF_Field {
 	}
 	/**
 	 * Retrieve set attribute of a field
-	 * @param  array $attribute 	the array of attributes to query
-	 * @return array            	the array of attributes with the values
+	 *
+	 * @param array   $attribute the array of attributes to query
+	 * @return array             the array of attributes with the values
 	 */
 	public function get_attributes( $attributes ) {
 
-		if (! is_array($attributes) ) {
+		if ( ! is_array( $attributes ) ) {
 			return false;
 		}
 
@@ -167,18 +168,18 @@ class FAF_Field {
 	public function set_attribute( $name , $value ) {
 		$name = "set_" . $name;
 
-		if (method_exists($this, $name)) {
-			$this->$name($value);
+		if ( method_exists( $this, $name ) ) {
+			$this->$name( $value );
 		}
 		else {
-			print("$this->name doesn't have the $name property.");
+			print( "$this->name doesn't have the $name property." );
 		}
 
 	}
 
 	public function render() {
 		$return = "<tr valign='top' class='form-field";
-		if ($this->required) {
+		if ( $this->required ) {
 			$return .= " form-required'>\r\n";
 		} else {
 			$return .= "'>\r\n";
@@ -198,13 +199,13 @@ class FAF_Field {
 		}
 		$return .= $this->render_field() . "\r\n";
 		if ( isset( $this->wrapper ) ) {
-			$return .= '</' . $this->wrapper['element'] . ">\r\n"; 
+			$return .= '</' . $this->wrapper['element'] . ">\r\n";
 		}
-		if (isset($this->description) && (! empty($this->description))) {
+		if ( isset( $this->description ) && ( ! empty( $this->description ) ) ) {
 			$return .= "<span class='faf-description'>" . $this->description . "</span>\r\n";
 		}
 		$return .= "</td>\r\n";
-		
+
 		$return .= "</tr>\r\n";
 
 		print $return;

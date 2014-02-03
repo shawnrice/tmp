@@ -4,13 +4,13 @@ class FAF_Field_Hidden extends FAF_Field {
 
 	protected $value;
 	protected $id;
- 	
- 	public function __construct($name, $label) {
+
+	public function __construct( $name, $label ) {
 		// I need to do some sanitization functions on this.
-		$this->set_name($name);
-		$this->set_type('hidden');
-		$this->set_label($label);
-		$this->set_id($name);
+		$this->set_name( $name );
+		$this->set_type( 'hidden' );
+		$this->set_label( $label );
+		$this->set_id( $name );
 		$this->classes = array( "form-field" );
 
 		return TRUE;
@@ -29,27 +29,27 @@ class FAF_Field_Hidden extends FAF_Field {
 		$return = "<input name='$this->name' type='hidden' ";
 
 
-		if ( isset($this->classes) ) {
-			$return .= " class='" . implode(" ", $this->classes) . "' ";
+		if ( isset( $this->classes ) ) {
+			$return .= " class='" . implode( " ", $this->classes ) . "' ";
 		}
 
-		if ( isset($this->required) ) {
-			if ($this->required) {
+		if ( isset( $this->required ) ) {
+			if ( $this->required ) {
 				$return .= " required ";
 			}
 		}
 
-		if ( isset($this->disabled) ) {
-			if ($this->disabled) {
+		if ( isset( $this->disabled ) ) {
+			if ( $this->disabled ) {
 				$return .= " disabled ";
 			}
 		}
 
-		if ( isset($this->id) ) {
+		if ( isset( $this->id ) ) {
 			$return .= " id='$this->id' ";
 		}
 
-		if ( isset($this->value) ){
+		if ( isset( $this->value ) ) {
 			$return .= " value='$this->value' ";
 		}
 
@@ -61,7 +61,7 @@ class FAF_Field_Hidden extends FAF_Field {
 	// Since this particular field is hidden, we shouldn't put it in the table.
 	public function render() {
 		$return = "<tr valign='top' class='form-field";
-		if ($this->required) {
+		if ( $this->required ) {
 			$return .= " form-required'>\r\n";
 		} else {
 			$return .= "'>\r\n";
@@ -81,15 +81,15 @@ class FAF_Field_Hidden extends FAF_Field {
 		}
 		$return .= $this->render_field() . "\r\n";
 		if ( isset( $this->wrapper ) ) {
-			$return .= '</' . $this->wrapper['element'] . ">\r\n"; 
+			$return .= '</' . $this->wrapper['element'] . ">\r\n";
 		}
 		$return .= "</td>\r\n";
-		
+
 		$return .= "</tr>\r\n";
 
 		print $return;
 
-	}	
+	}
 
 }
 

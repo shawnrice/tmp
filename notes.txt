@@ -23,6 +23,23 @@ REPLACE:
 $1 $2 $3
 
 
+----
+
+For locations, I need multiple possibilities:
+	bp-signup, admin-form
+
+	Domain -- none, user, blog
+
+	Domain -- allowed places:
+		-- user : profile page, other
+		-- blog : signup, admin sub-options, other
+		-- none : other
+
+		Other: page, shortcode
+
+	How do I setup a page for forms?
+
+
 
 
 

@@ -19,18 +19,18 @@ form_and_field_network_manage_menu();
 // faf_admin_form_builder_create_page();
 
 
-	wp_enqueue_script( "jquery" );
-	wp_enqueue_script( "jquery-ui-core" );
-	wp_enqueue_script( "jquery-ui-dialog" );
-	wp_enqueue_script( "jquery-ui-draggable" );
-	wp_enqueue_script( "jquery-ui-droppable" );
-	wp_enqueue_script( "jquery-ui-sortable" );
-	wp_enqueue_script( "jquery-ui-accordion" );
-	wp_enqueue_script( "jquery-effects-core" );
-	wp_enqueue_script( "jquery-effects-fade" );
+wp_enqueue_script( "jquery" );
+wp_enqueue_script( "jquery-ui-core" );
+wp_enqueue_script( "jquery-ui-dialog" );
+wp_enqueue_script( "jquery-ui-draggable" );
+wp_enqueue_script( "jquery-ui-droppable" );
+wp_enqueue_script( "jquery-ui-sortable" );
+wp_enqueue_script( "jquery-ui-accordion" );
+wp_enqueue_script( "jquery-effects-core" );
+wp_enqueue_script( "jquery-effects-fade" );
 
 
-function faf_admin_form_builder_create_page()  {
+function faf_admin_form_builder_create_page() {
 	faf_admin_init();
 	faf_locations_init();
 	// Create the form.
@@ -45,6 +45,14 @@ function faf_admin_form_builder_create_page()  {
 	$name->set_size( 30 );
 	$name->set_max_length( 60 );
 	$name->set_placeholder( 'Enter a human readable name.' );
+
+	$scope = new FAF_Field_List( 'scope' , 'Scope' );
+	$scope->set_required( TRUE );
+	$scope->add_option( 'User' );
+	$scope->add_option( 'Blog' );
+	$scope->add_option( 'None' );
+	$scope->add_class( 'form-maker-select' );
+	$scope->set_description( 'A scope ties form submissions to a variable. So, if the scope is set to `user`, then it can be filled out only once per user.');
 
 	$classes = new FAF_Field_Text( 'form_classes' , 'CSS Classes' );
 	$classes->set_required( FALSE );
@@ -63,17 +71,17 @@ function faf_admin_form_builder_create_page()  {
 	$method->set_default( 'placeholder' );
 	$method->add_class( 'form-maker-select' );
 	$method->set_disabled( TRUE );
-
-	?>
+	
+?>
 
 	<div class="wrap">
-		<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
-		<input type="button" id="button" value='Show Dialog'>
+		<h2><?php echo esc_html( get_admin_page_title() . ': form builder '); ?></h2>
 		<div id="form-maker">
 		<form id="form">
 			<table>
 			<?php $id->render(); ?>
 			<?php $name->render(); ?>
+			<?php $scope->render(); ?>
 			<?php do_action( 'faf_list_locations' ); ?>
 			<?php $method->render(); ?>
 			<?php $classes->render(); ?>
@@ -97,12 +105,15 @@ function faf_admin_form_builder_create_page()  {
 	</div>
 
 	<script>
+
 		jQuery( document ).ready( function( $ )  {
 			$( '#form' ).on( 'submit' ,  function( event )  {
 				event.preventDefault();
 				console.log( $( this ).serialize() );
 			});
+
 		});
+
 	</script>
 
 
@@ -114,9 +125,9 @@ function faf_admin_form_builder_create_page()  {
  */
 
 
-function form_and_field_queue_inline_js()  {
-  // Insert dynamic footer JS here.
-  ?>
+function form_and_field_queue_inline_js() {
+	// Insert dynamic footer JS here.
+?>
   <script>
 
 	function makeid() {
@@ -150,15 +161,15 @@ function form_and_field_queue_inline_js()  {
 		};
 
 		$( "#dialog" ).dialog( {
-		    autoOpen: false , 
-		    modal: true , 
-		    minHeight: 600 , 
+		    autoOpen: false ,
+		    modal: true ,
+		    minHeight: 600 ,
 		    minWidth: 400 ,
 		    height: 600,
-		    width: '60%' , 
-		    title: 'Field Configuration' , 
-		    show: 'fade' , 
-		    hide: 'fade' , 
+		    width: '60%' ,
+		    title: 'Field Configuration' ,
+		    show: 'fade' ,
+		    hide: 'fade' ,
 		    closeOnEscape: false,
 		    position: [ 'top', 60 ] ,
 		    buttons : {
@@ -166,24 +177,24 @@ function form_and_field_queue_inline_js()  {
     	            fid = $('#identifier').val();
     	            field_data = JSON.stringify($('#faf_configure_field_form').serializeObject());
     	            name = $( '#name' ).val();
-    	            document.getElementById( fid ).innerHTML = '<span class="faf-name-li">' + name + '</span> <span class="faf-type-li">' 
+    	            document.getElementById( fid ).innerHTML = '<span class="faf-name-li">' + name + '</span> <span class="faf-type-li">'
     	            	+ $( '#faf-type' ).val() + '</span><input type="hidden" name="' + fid + '" value="' + field_data + '" />';
     	            $( this ).dialog( 'close' );
 
         	    },
         	    "Remove Field": function()  {
-        	    	// Confirm the removal before acting on it.        	    	
+        	    	// Confirm the removal before acting on it.
         	    	if (confirm('Are you sure that you want to remove the field?') == true ) {
 	        	    	// Remove the field from the form.
 	    	            $( '#' + $( '#identifier' ).val() ).parent().remove();
 	    	            $( this ).dialog( 'close' );
 					}
         	    }
-        	}, 
+        	},
 		    open: function()  {
 		    	// I really have no idea why, oh why I needed to do this, but, apparently, this works.
 		    	// I need to find a less hackish way to go with this.
-				setTimeout(function() {
+//				setTimeout(function() {
 					$( '#spy' ).bind( "enterKey", function( e ) {
 					  var lines = $( this ).val().split( '\n' );
 					  var len = lines.length;
@@ -215,19 +226,19 @@ function form_and_field_queue_inline_js()  {
 					// Set the focus to the first text box
 					$( '#name' ).focus();
 					// Put in a hidden field with the identifier.
-					$( '<input type="hidden" name="identifier" id="identifier" value=' + 
+					$( '<input type="hidden" name="identifier" id="identifier" value=' +
 						field_id + ' />' ).insertBefore( 'input#name' );
 
-				}, 1000 );
+			//	}, 1000 );
 		    }
 		});
-		
+
         $( '.draggable' ).draggable( {
-        	helper: 'clone' , 
-        	cursor: 'move' , 
-        	zIndex: 200 , 
-        	opacity: .75 , 
-        	containment: 'window' , 
+        	helper: 'clone' ,
+        	cursor: 'move' ,
+        	zIndex: 200 ,
+        	opacity: .75 ,
+        	containment: 'window' ,
         	connectToSortable: '#canvas-drop',
         	addClasses: false,
         	start: function () {
@@ -238,16 +249,16 @@ function form_and_field_queue_inline_js()  {
 		var origin = 'sortable';
 
     	$( '#canvas-drop' ).droppable( {
-			activeClass: "ui-state-default" , 
-			hoverClass: "ui-state-hover" , 
+			activeClass: "ui-state-default" ,
+			hoverClass: "ui-state-hover" ,
 			accept: "#palette > ul > li" ,
 			drop: function ( event, ui ) {
 				// Null. For now.
          	}
 		}).sortable( {
-			items: "li:not( .placeholder ) " , 
+			items: "li:not( .placeholder ) " ,
 			cursor: "move" ,
-			forcePlaceholderSize: true , 
+			forcePlaceholderSize: true ,
 			placeholder: 'placeholder',
 			beforeStop: function( event, ui ) {
 				if ( origin == 'draggable' ) {
@@ -263,17 +274,18 @@ function form_and_field_queue_inline_js()  {
 				var url = '<?php echo admin_url( "admin-ajax.php" ); ?>';
 				var data = {
 					// our current ajax handler
-					action: 'dd_ajax' , 
-					id: id , 
+					action: 'dd_ajax' ,
+					id: id ,
 				};
 				$.post( url , data , function( data )  {
 					document.getElementById( 'dialog' ).innerHTML = data;
+									$( '#dialog' ).dialog( 'open' );
+
 				});
-				$( '#dialog' ).dialog( 'open' );
 			},
 
 			sort: function( event ,  ui )  {
-				$( this ).removeClass( "ui-state-default" );
+				$( this ).removeClass( 'ui-state-default' );
 			}
 		});
 	});
@@ -282,56 +294,57 @@ function form_and_field_queue_inline_js()  {
 <?php
 }
 
-function faf_admin_init()  {
+function faf_admin_init() {
 	add_action( 'faf_list_fields' ,  'faf_list_fields_start' ,  1 );
-	add_action( 'faf_list_fields' ,  'faf_list_fields_end' ,  99 );
+	add_action( 'faf_list_fields' ,  'faf_list_fields_end' ,  999 );
 	add_action( 'faf_list_fields' ,  'faf_add_defaults' ,  10 );
 }
 
 
 
-function faf_list_fields_start()  {
+function faf_list_fields_start() {
 	echo "<ul>";
 }
-function faf_list_fields_end()  {
+function faf_list_fields_end() {
 	echo "</ul>";
 }
 
-function faf_add_defaults()  {
-	$defaults = array( 	'text' , 
-						'textarea' , 
-						'list' , 
-						'radio' , 
-						'checkbox' , 
-						'number' , 
-						'password',
-						'hidden',
-		 );
-	foreach( $defaults as $field )  {
+function faf_add_defaults() {
+	$defaults = array(  'text' ,
+		'textarea' ,
+		'list' ,
+		'radio' ,
+		'checkbox' ,
+		'number' ,
+		'password',
+		'hidden',
+	);
+	foreach ( $defaults as $field ) {
 		faf_add_field( $field );
 	}
 }
 
-function faf_add_field( $field )  {
+function faf_add_field( $field ) {
 	echo "<li id='field-element-$field' class='draggable element'><div>" . ucfirst( $field )  . "</div></li>";
 }
 
-function faf_locations_init()  {
+function faf_locations_init() {
 	add_action( 'faf_list_locations' , 'faf_locations_start' , 1 );
 	add_action( 'faf_list_locations' , 'faf_locations_end' , 99 );
 
 	// Add the BP signup form location only if BP is active.
-	if( is_plugin_active( 'buddypress/bp-loader.php' ) )  {
+	if ( is_plugin_active( 'buddypress/bp-loader.php' ) ) {
 		add_action( 'faf_list_locations' , 'faf_location_bp_signup' );
 	}
 }
 
 /**
  * Action to start the beginning of the location select box on the form maker.
+ *
  * @return [type] [description]
  */
-function faf_locations_start()  {
-	?>
+function faf_locations_start() {
+?>
 	<tr valign='top' class='form-field form-required' required>
 		<th scope='row'><label for='form_locations'>Form Location: </label></th>
 		<td>
@@ -341,10 +354,11 @@ function faf_locations_start()  {
 
 /**
  * Action to close the location select box on the form maker.
+ *
  * @return [type] [description]
  */
-function faf_locations_end()  {
-	?>
+function faf_locations_end() {
+?>
 			</select>
 		</td>
 	</tr>
@@ -353,75 +367,76 @@ function faf_locations_end()  {
 
 /**
  * Function to add location to allow the alteration of the bp blog signup form.
+ *
  * @return [type] [description]
  */
-function faf_location_bp_signup()  {
-	?>
+function faf_location_bp_signup() {
+?>
 		<option value='action-signup_blogform'>BP signup blog form</option>
 	<?php
 }
 
 
 
-function form_and_field_network_manage_menu()  {
+function form_and_field_network_manage_menu() {
 	$tab = $_GET['tab'];
 	form_and_field_network_admin_tabs( $tab );
 
 }
 
-function form_and_field_network_admin_tabs( $current = 'general' )  {
-//	$dir=plugins_url( 'images/data_32.png' , __FILE__ );
+function form_and_field_network_admin_tabs( $current = 'general' ) {
+	// $dir=plugins_url( 'images/data_32.png' , __FILE__ );
 
 	$plugin_slug = "form-and-field";
 
-    $tabs = array(  'general' => 'General' , 
-    				'form-builder' => 'Form Builder' , 
-    				'locations' => 'Locations',
-    				'settings' => 'Settings',
-  );
-    echo '<div id="icon-themes" class="icon32"><br></div>';
-    echo '<h2 class="">';
-    foreach( $tabs as $tab => $name ) {
-        $class = ( $tab == $current )  ? ' nav-tab-active' : '';
-        echo "<a class='nav-tab$class' href='?page=$plugin_slug&tab=$tab'>$name</a>";
-    }
-    echo '</h2>';
+	$tabs = array(  'general' => 'General' ,
+		'form-builder' => 'Form Builder' ,
+		'locations' => 'Locations',
+		'settings' => 'Settings',
+	);
+	echo '<div id="icon-themes" class="icon32"><br></div>';
+	echo '<h2 class="">';
+	foreach ( $tabs as $tab => $name ) {
+		$class = ( $tab == $current )  ? ' nav-tab-active' : '';
+		echo "<a class='nav-tab$class' href='?page=$plugin_slug&tab=$tab'>$name</a>";
+	}
+	echo '</h2>';
 
-    switch( $current )  {
-    	case 'general':
-    		faf_admin_general();
-    		break;
-    	case 'form-builder':
-    		faf_admin_form_builder_create_page();
-    		break;
-    	case 'settings':
-			faf_admin_settings();
-			break;    	
-    	default:
-    		faf_admin_general();
-    		break;
-    }
+	switch ( $current ) {
+	case 'general':
+		faf_admin_general();
+		break;
+	case 'form-builder':
+		faf_admin_form_builder_create_page();
+		break;
+	case 'settings':
+		faf_admin_settings();
+		break;
+	default:
+		faf_admin_general();
+		break;
+	}
 }
 
 
-function faf_admin_general()  {
+function faf_admin_general() {
 	echo "This is the general page";
 }
 
 function faf_admin_settings() {
 
-	$settings = new FAF_Form('faf_settings');
+	$settings = new FAF_Form( 'faf_settings' );
 
-	$settings->add_region('Assets');
+	$settings->add_region( 'Assets' );
 	$settings->set_region_description( 'Assets' , 'Please specify where you would like to load the external assets from.' );
-	$jvalidate = new FAF_Field_List('jvalidate' , 'jQuery Validate');
-	$jvalidate->add_option('local' , 'Locally Hosted');
-	$jvalidate->add_option('cdnjs' , 'CDNjs');
-	$jvalidate->add_option('microsoft' , 'Microsoft');
-	$jvalidate->set_description('Choose where to load jQuery Validate from.');
-	$jvalidate->set_default('Locally Hosted');
+	$jvalidate = new FAF_Field_List( 'jvalidate' , 'jQuery Validate' );
+	$jvalidate->add_option( 'local' , 'Locally Hosted' );
+	$jvalidate->add_option( 'cdnjs' , 'CDNjs' );
+	$jvalidate->add_option( 'microsoft' , 'Microsoft' );
+	$jvalidate->set_description( 'Choose where to load jQuery Validate from.' );
+	$jvalidate->set_default( 'Locally Hosted' );
 
-	$settings->add_field('Assets', $jvalidate);
+	$settings->add_field( 'Assets', $jvalidate );
 	$settings->print_form();
 
 

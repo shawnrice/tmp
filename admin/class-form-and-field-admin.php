@@ -10,7 +10,6 @@
  */
 
 /**
- *
  * Class for the administrative side of the Form and Field plugin.
  *
  * @TODO: Rename this class to a proper name for your plugin.
@@ -131,11 +130,11 @@ class Form_And_Field_Admin {
 			return;
 		}
 
-//		$screen = get_current_screen();
-//		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Form_And_Field::VERSION );
-//		}
-//
+		//  $screen = get_current_screen();
+		//  if ( $this->plugin_screen_hook_suffix == $screen->id ) {
+		wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Form_And_Field::VERSION );
+		//  }
+		//
 	}
 
 	/**
@@ -149,7 +148,7 @@ class Form_And_Field_Admin {
 	 *
 	 * @return    null    Return early if no settings page is registered.
 	 */
-	
+
 
 
 
@@ -207,7 +206,7 @@ class Form_And_Field_Admin {
 	 * @since    1.0.0
 	 */
 	public function display_plugin_admin_page() {
-		include_once( 'views/admin.php' );
+		include_once 'views/admin.php';
 	}
 
 	/**

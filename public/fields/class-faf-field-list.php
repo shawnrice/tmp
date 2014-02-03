@@ -6,29 +6,29 @@ class FAF_Field_List extends FAF_Field {
 	protected $multiple;
 	protected $other;
 
-	public function __construct($name, $label) {
-		$this->set_name($name);
-		$this->set_type('select');
-		$this->set_label($label);
+	public function __construct( $name, $label ) {
+		$this->set_name( $name );
+		$this->set_type( 'select' );
+		$this->set_label( $label );
 		$this->classes = array( "form-field" );
 
 		return TRUE;
 	}
 
 	public function add_option( $name, $value = '' ) {
-		if (empty($value)) {
-			$value = strtolower($name);
+		if ( empty( $value ) ) {
+			$value = strtolower( $name );
 		} else {
-			$value = strtolower($value);
+			$value = strtolower( $value );
 		}
-		if (! in_array($name, $this->options ) ) {
+		if ( ! in_array( $name, $this->options ) ) {
 			$this->options[$name] = array( "name" => $name, "value" => $value );
 		}
 	}
 
 	public function remove_option( $name ) {
-		if (in_array( $name, array_keys($this->options) )) {
-			unset($this->options[$name]);
+		if ( in_array( $name, array_keys( $this->options ) ) ) {
+			unset( $this->options[$name] );
 		}
 	}
 
@@ -41,7 +41,7 @@ class FAF_Field_List extends FAF_Field {
 	}
 
 	public function set_default( $name ) {
-		if (in_array( $name, array_keys($this->options) ) ) {
+		if ( in_array( $name, array_keys( $this->options ) ) ) {
 			$this->value = $name;
 		}
 	}
@@ -63,7 +63,7 @@ class FAF_Field_List extends FAF_Field {
 		return $this->multiple;
 	}
 
-	public function set_other($bool) {
+	public function set_other( $bool ) {
 		$this->other = $bool;
 	}
 	public function get_other() {
@@ -73,24 +73,24 @@ class FAF_Field_List extends FAF_Field {
 	public function render_field() {
 		$return = "<select name='$this->name'";
 
-		if ( ! empty($this->classes) ) {
-			$return .= " class='" . implode(" ", $this->classes) . "' ";
+		if ( ! empty( $this->classes ) ) {
+			$return .= " class='" . implode( " ", $this->classes ) . "' ";
 		}
 
-		if ( isset($this->required) ) {
-			if ($this->required) {
+		if ( isset( $this->required ) ) {
+			if ( $this->required ) {
 				$return .= " required ";
 			}
 		}
 
-		if ( isset($this->disabled) ) {
-			if ($this->disabled) {
+		if ( isset( $this->disabled ) ) {
+			if ( $this->disabled ) {
 				$return .= " disabled ";
 			}
 		}
 
 		$return .=">\r\n";
-		foreach($this->options as $option) {
+		foreach ( $this->options as $option ) {
 			$return .= "<option value='" . $option['value'] . "'";
 
 			if ( $this->value == $option['name'] ) {
@@ -100,13 +100,13 @@ class FAF_Field_List extends FAF_Field {
 
 		}
 
-		if ($this->other) {
+		if ( $this->other ) {
 			$return .= "<option value='other'>Other</option>\r\n";
 		}
 
 		$return .= "</select>\r\n";
 
-		if ($this->other) {
+		if ( $this->other ) {
 			$return .= "<ul><li><label>Please Specify: <input type='text' value=''";
 			$return .= " name='" . $this->name . "_other'></label></li></ul>\r\n";
 		}
