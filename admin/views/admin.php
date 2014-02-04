@@ -114,6 +114,20 @@ function faf_admin_form_builder_create_page() {
 
 		});
 
+		// I can't get this to work as javascript when I load it inside the dialog where it is supposed to be loaded,
+		// hence, I'll just embed this in the page anyway just in case someone needs a checkbox field. I'm looking
+		// for a more elegant way to do this.
+		var options_checkbox_count = 15;
+		jQuery(document).on( 'click', '.faf-add-button-options_checkbox' , function(e) {
+			var options_checkbox = "<tr><td><input name='options_checkbox_key_" + options_checkbox_count + "' type='text' class='form-field faf-key-value-variable-field'  size='30'  placeholder='Label' ></td><td><input name='options_checkbox" + options_checkbox_count + "' type='text' class='form-field faf-key-value-variable-field'  size='10'  placeholder='Value' ></td><td valign='middle'><div class='faf-add-button faf-add-button-options_checkbox'></div> <div class='faf-delete-button faf-delete-button-options_checkbox'></div></td></tr>";
+			options_checkbox_count++;
+			jQuery(this).closest('tr').parent().append(options_checkbox);
+		});
+		jQuery(document).on('click', '.faf-delete-button-options_checkbox' , function(e) {
+			jQuery(this).closest('tr').remove();
+		});
+
+
 	</script>
 
 
@@ -279,9 +293,12 @@ function form_and_field_queue_inline_js() {
 				};
 				$.post( url , data , function( data )  {
 					document.getElementById( 'dialog' ).innerHTML = data;
-									$( '#dialog' ).dialog( 'open' );
+					$( '#dialog' ).dialog( 'open' );
+					
 
 				});
+
+				setTimeout(function() {alert(testing_content);}, 3000);
 			},
 
 			sort: function( event ,  ui )  {

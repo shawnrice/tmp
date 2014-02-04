@@ -311,21 +311,57 @@ class Form_And_Field {
 	}
 
 	/**
-	 * Creates the form and the meta table.
+	 * Creates the init, form, and meta tables.
 	 * @return null
 	 */
 	public function form_and_field_install_tables() {
 		global $wpdb;
-		$faf_db_version = '1.0';
+		$faf_db_version = '1.01';
+
+
+		$location_table = $wpdb->base_prefix . 'form_and_field_init';
+
+		// Check to make sure the location table exists. If not, make it.
+	    if( $wpdb->get_var( 'SHOW TABLES LIKE ' . $location_table ) != $location_table ) {
+
+	    	/**
+	    	 *
+	    	 * I've named this table "init" even though it's the location table.
+	    	 * This is just a 'key/value' sort of table that will be queried on
+	    	 * every page load in order to queue the correct actions to load all
+	    	 * of the forms. If there is a better way to do this, then I'd like
+	    	 * to know. Currently, it's fairly unsatisfying.
+	    	 * 
+	    	 */
+	    	
+			$sql = "CREATE TABLE $location_table (
+			  			location varchar(60) NOT NULL, 
+			  			formid varchar(15) NOT NULL,
+			  			KEY (location)
+		  			);
+		  		";
+
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($sql);
+
+		}
 
 		$form_table = $wpdb->base_prefix . 'form_and_field_meta';
 
 		// Check to make sure the form table exists. If not, make it.
 	    if( $wpdb->get_var( 'SHOW TABLES LIKE ' . $form_table ) != $form_table ) {
 
+	    	/**
+	    	 *
+	    	 *	FormId is obviously the unique name.
+	    	 *	The blogid is what the form is tied to, i.e. who created it.
+	    	 *	The form is a serialized representation of the form.
+	    	 * 
+	    	 */
+
 			$sql = "CREATE TABLE $form_table (
 			  			formid varchar(15) NOT NULL,
-			  			location varchar(15) NOT NULL, 
+			  			blogid int NOT NULL,
 			  			form text NOT NULL,
 			  			PRIMARY KEY (formid),
 			  			KEY (location)
@@ -342,12 +378,35 @@ class Form_And_Field {
 		// Check to make sure the data table exists. If not, make it.
 	    if( $wpdb->get_var( 'SHOW TABLES LIKE ' . $data_table ) != $data_table ) {
 
+	    	/**
+	    	 *
+	    	 * We'll have only one data table. But, we want this to accommodate multisite
+	    	 * as well as single.
+	    	 *
+	    	 * Hence, the 'id' just makes sure things are separate.
+	    	 *
+	    	 * The blogid / userid should be used only if the data is bound to either a
+	    	 * blog / user, respectively.
+	    	 *
+	    	 * The name field is the name of the field. These can be multiple for multiple
+	    	 * answers. The data is just the value. And the formid is, obviously, the form
+	    	 * that also serves as the "decoder" ring for what the values actually are.
+	    	 *
+	    	 * I might reconsider the indexes.
+	    	 * 
+	    	 */
+
+
 			$sql = "CREATE TABLE $data_table (
-						id int NOT NULL AUTO_INCREMENT, 
+						id int NOT NULL AUTO_INCREMENT,
+						blogid int ,
+						userid varchar(50) ,
 						formid varchar(15) NOT NULL,
+						name varchar(30) NOT NULL,
 						data text NOT NULL,
 						PRIMARY KEY (id),
-						KEY (formid)
+						KEY (formid),
+						KEY (blogid)
 					);
 				";
 
@@ -365,8 +424,11 @@ class Form_And_Field {
 		}
 
 		// Register the database version.
-	    add_option('form_and_field_db_version', $faf_db_version);
-
+		if (get_site_option( 'form_and_field_db_version' )) {
+			update_option('form_and_field_db_version', $faf_db_version);	
+		} else {
+	    	add_option('form_and_field_db_version', $faf_db_version);
+		}
 	}
 
 

@@ -177,7 +177,7 @@ class FAF_Field_Key_Value extends FAF_Field {
 				$return .= " value='" . current( $this->values ) . "' ";
 			}
 
-			$return .= "></td><td valign='middle'><div class='faf-add-button faf-add-button-$this->name'></div>";
+			$return .= "></td><td valign='middle'><div class='faf-add-button faf-add-button-$this->name' onclick='add_another();'></div>";
 			if ( $i > 0 ) {
 				$return .= "<div class='faf-delete-button faf-delete-button-$this->name'></div>";
 			}
@@ -245,20 +245,37 @@ class FAF_Field_Key_Value extends FAF_Field {
 		}
 		$value_end .= "></td>";
 
+//		ob_start();
+
+		$script = "<script>\r\n";
+		$script .= "var " . str_replace('-','_',$this->name) . "_count = " . ($i + 1) . ";\r\n";
+		$script .= "jQuery(document).on( 'click', '.faf-add-button-$this->name' , function(e) {\r\n";
+		$script .= "var " . str_replace('-','_',$this->name) . " = \"<tr>" . $base . "_key_\" + " . str_replace('-','_',$this->name) . "_count + \"" . $key_end;
+		$script .= $base . "\" + " . str_replace('-','_',$this->name) . "_count + \"" . $value_end . "<td valign='middle'><div class='faf-add-button faf-add-button-$this->name'></div> <div class='faf-delete-button faf-delete-button-$this->name'></div></td></tr>\";\r\n";
+		$script .= str_replace('-','_',$this->name) . "_count++;\r\n";
+		$script .= "jQuery(this).closest('tr').parent().append(" . str_replace('-','_',$this->name) . ");\r\n";
+		$script .= "});\r\n";
+		$script .= "jQuery(document).on('click', '.faf-delete-button-$this->name' , function(e) {\r\n";
+		$script .= "jQuery(this).closest('tr').remove();\r\n";
+		$script .= "});\r\n";
+		$script .= "</script>\r\n";
+
 ?>
 	<script>
-		var <?php echo str_replace('-','_',$this->name) ?>_count = <?php echo $i + 1; ?>;
-		jQuery(document).on( 'click', '.faf-add-button-<?php echo $this->name; ?>' , function(e) {
-			var <?php echo str_replace('-','_',$this->name) ?> = "<tr><?php echo $base; ?>_key_" + <?php echo str_replace('-','_',$this->name) ?>_count + "<?php echo $key_end . $base; ?>" + <?php echo str_replace('-','_',$this->name) ?>_count + "<?php echo $value_end;?><td valign='middle'><div class='faf-add-button faf-add-button-<?php echo $this->name; ?>'></div> <div class='faf-delete-button faf-delete-button-<?php echo $this->name; ?>'></div></td></tr>";
-			<?php echo str_replace('-','_',$this->name) ?>_count++;
-			jQuery(this).closest('tr').parent().append(<?php echo str_replace('-','_',$this->name) ?>);
-		});
-		jQuery(document).on('click', '.faf-delete-button-<?php echo $this->name; ?>' , function(e) {
-			jQuery(this).closest('tr').remove();
-		});
+		// var <?php echo str_replace('-','_',$this->name) ?>_count = <?php echo $i + 1; ?>;
+		// jQuery(document).on( 'click', '.faf-add-button-<?php echo $this->name; ?>' , function(e) {
+		// 	var <?php echo str_replace('-','_',$this->name) ?> = "<tr><?php echo $base; ?>_key_" + <?php echo str_replace('-','_',$this->name) ?>_count + "<?php echo $key_end . $base; ?>" + <?php echo str_replace('-','_',$this->name) ?>_count + "<?php echo $value_end;?><td valign='middle'><div class='faf-add-button faf-add-button-<?php echo $this->name; ?>'></div> <div class='faf-delete-button faf-delete-button-<?php echo $this->name; ?>'></div></td></tr>";
+		// 	<?php echo str_replace('-','_',$this->name) ?>_count++;
+		// 	jQuery(this).closest('tr').parent().append(<?php echo str_replace('-','_',$this->name) ?>);
+		// });
+		// jQuery(document).on('click', '.faf-delete-button-<?php echo $this->name; ?>' , function(e) {
+		// 	jQuery(this).closest('tr').remove();
+		// });
+
 	</script>
 <?php
-
+//	$script = ob_get_flush();
+		print_r($script);
 
 		return $return;
 	}
@@ -282,7 +299,7 @@ class FAF_Field_Key_Value extends FAF_Field {
 
 		$return .= "<td>\r\n";
 		$return .= "<table class='faf-key-value-field-table'>\r\n";
-		$return .= "<tr valign='top'>";
+//		$return .= "<tr valign='top'>";
 		// if ( isset( $this->wrapper ) ) {
 		//  $return .= '<' . $this->wrapper['element'] . ' id="' . $this->wrapper['id'] . '"';
 		//  if ( isset( $this->wrapper['class'] ) && is_array( $this->wrapper['class'] ) && ( count( $this->wrapper['class'] > 0 ) ) ) {
@@ -299,7 +316,7 @@ class FAF_Field_Key_Value extends FAF_Field {
 		//  $return .= '</' . $this->wrapper['element'] . ">\r\n";
 		// }
 
-		$return .= "</tr>\r\n";
+//		$return .= "</tr>\r\n";
 		$return .= "</table>\r\n";
 
 		if ( isset( $this->description ) && ( ! empty( $this->description ) ) ) {

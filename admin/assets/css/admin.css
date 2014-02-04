@@ -149,7 +149,10 @@
 		opacity: .5;
 		display: inline-block;
 	}
-
+.faf-key-value-field-table, .faf-key-value-field-table tr, .faf-key-value-field-table td {
+	margin: 0;
+	padding: 0;
+}
 	.faf-delete-button:hover, .faf-add-button:hover {
 		opacity: 1;
 

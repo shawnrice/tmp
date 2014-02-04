@@ -366,13 +366,20 @@ function faf_builder_do_field_list( &$form, &$type ) {
 function faf_builder_do_field_checkbox( &$form, &$type ) {
 	$type->set_value( 'checkbox' );
 
-	$options = new FAF_Field_Key_Value('options_checkbox' , 'Options');
-	$options->set_value_placeholder('Value');
-	$options->set_key_placeholder('Label');
+	$options = new FAF_Field_Key_Value( 'options_checkbox' , 'Options' );
+	$options->set_value_placeholder( 'Value' );
+	$options->set_key_placeholder( 'Label' );
 	$options->set_key_size( 30 );
 	$options->set_value_size( 10 );
 
-	$form->add_field( 'Configure Element' , $options);
+	$form->add_field( 'Configure Element' , $options );
+
+	$other = new FAF_Field_Radio( 'other', 'Include "Other" Option' );
+	$other->add_option( 'Yes', 'yes' );
+	$other->add_option( 'No', 'no' );
+	$other->set_default( 'No' );
+
+	$form->add_field( 'Configure Element' , $other );
 
 	$form->add_region( 'More Attributes' );
 
@@ -409,10 +416,21 @@ function faf_builder_do_field_checkbox( &$form, &$type ) {
 function faf_builder_do_field_radio( &$form, &$type ) {
 
 	$type->set_value( 'radio' );
-?>
-	<h3>Configure Radio Field Element</h3>
 
-<?php
+	$options = new FAF_Field_Key_Value( 'options_checkbox' , 'Options' );
+	$options->set_value_placeholder( 'Value' );
+	$options->set_key_placeholder( 'Label' );
+	$options->set_key_size( 30 );
+	$options->set_value_size( 10 );
+
+	$form->add_field( 'Configure Element' , $options );
+
+	$other = new FAF_Field_Radio( 'other', 'Include "Other" Option' );
+	$other->add_option( 'Yes', 'yes' );
+	$other->add_option( 'No', 'no' );
+	$other->set_default( 'No' );
+
+	$form->add_field( 'Configure Element' , $other );
 
 	$form->add_region( 'More Attributes' );
 
@@ -549,13 +567,24 @@ function faf_registered_locations() {
 			'value' => 'signup_blogform',
 		),
 		'admin_settings' => array(
-			'label' => __( 'Options Page', 'form-and-field' ),
+			'label' => __( 'FAF Options Page', 'form-and-field' ),
 			'type' => 'admin-options-menu',
 			'value' => ''
 		),
 	);
 
 	return apply_filters( 'faf_form_locations', $reg_loc );
+}
+
+function faf_add_admin_menu( $args ) {
+
+	// $args['label'],
+	// $args['page'],
+	// $args['menu'],
+	// 'manage_options'
+	// $args['slug'],
+	
+
 }
 
 // add_options_page( $page_title, $menu_title, $capability, $menu_slug, $function);
@@ -569,7 +598,7 @@ function faf_registered_locations() {
 
 
 
-function form_and_field_enqueue_jquery_validation() {
+function form_and_field_enqueue_jquery_validate() {
 
 	// Microsoft CDN
 	// http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js
